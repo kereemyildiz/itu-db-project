@@ -1,0 +1,40 @@
+insert into teacher (teacher_name,facultyId) values (
+	'Feza Buzluca',
+	3
+);
+insert into teacher (teacher_name,facultyId) values (
+	'Kerem Yildiz',
+	3
+);
+insert into teacher (teacher_name,facultyId) values (
+	'John Doe',
+	5
+);
+insert into teacher (teacher_name,facultyId) values (
+	'Hazim Ekenel',
+	5
+);
+insert into teacher (teacher_name,facultyId) values (
+	'Turgut Uyar',
+	6
+);
+insert into teacher (teacher_name,facultyId) values (
+	'Bora Döken',
+	6
+);
+insert into teacher (teacher_name,facultyId) values (
+	'Ahmet Evren',
+	4
+);
+insert into teacher (teacher_name,facultyId) values (
+	'Ali Yilmaz',
+	4
+);
+insert into teacher (teacher_name,facultyId) values (
+	'Hasan Huseyin',
+	2
+);
+insert into teacher (teacher_name,facultyId) values (
+	'Ahmet Erten',
+	2
+);

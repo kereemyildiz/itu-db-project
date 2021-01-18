@@ -1,12 +1,15 @@
 import os
 import psycopg2 as dbapi2
-import user
+from models.user import *
+import models.course
+from models.faculty import *
+from models.teacher import *
+from models.course import *
+from models.mentor_info import *
 
 
 def add_user(columns, name, email, password):
-    # TODO : İF USERNAME İS ALREADY TAKEN OR NOT
-
-    if (not user.get_user(email)):
+    if (not get_user(email)):
         query = """insert into users ({}) values ({},{},{})""".format(
             columns, name, email, password)
         run(query)
@@ -14,6 +17,59 @@ def add_user(columns, name, email, password):
     else:
         return False
 
+def add_mentor(columns,mentorID,facultyId,availability):
+    if(get_mentor_by_id(mentorID) == False):
+        query = """insert into mentor ({}) values ({},{},{})""".format(
+            columns, mentorID, facultyId, availability)
+        run(query)
+
+def get_mentor_by_id(mentorID):
+    con = dbapi2.connect(os.getenv('DATABASE_URL'))
+    cur = con.cursor()
+    cur.execute("""SELECT * FROM  mentor
+                WHERE (mentorId= {})""".format(mentorID))
+    row = cur.fetchone()
+    if row:
+        return True
+    else:
+        return False
+
+def add_faculty(columns,faculty_name):
+    if (not get_faculty(faculty_name)):
+        query = """insert into faculty ({}) values ({})""".format(
+            columns, faculty_name)
+        run(query)
+        return True
+    else:
+        return False
+
+def add_teacher(columns,teacher_name,facultyId):
+    if (not get_teacher(teacher_name)):
+        query = """insert into teacher ({}) values ({},{})""".format(
+            columns, teacher_name,facultyId)
+        run(query)
+        return True
+    else:
+        return False
+
+
+def add_course(columns,course_code,course_name,teacherId,facultyId):
+    if (not get_course(course_code,teacherId)):
+        query = """insert into course ({}) values ({},{},{},{})""".format(
+            columns, course_code,course_name,teacherId,facultyId)
+        run(query)
+        return True
+    else:
+        return False
+
+def add_mentor_info(columns,mentorId,courseId,letter_grade,enrollment_year,teacherId):
+    if (not get_mentor_info(mentorId,courseId)):
+        query = """insert into mentor_info ({}) values ({},{},{},{},{})""".format(
+            columns, mentorId,courseId,letter_grade,enrollment_year,teacherId)
+        run(query)
+        return True
+    else:
+        return False
 
 def run(query):
     with dbapi2.connect(os.getenv("DATABASE_URL")) as con:

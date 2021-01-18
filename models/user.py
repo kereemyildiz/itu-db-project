@@ -9,6 +9,8 @@ class User(UserMixin):
         self.email = email
         self.password = password
         self.active = True
+        self.id = -1 # default -1 we will change this value
+        self.availability = True
 
 
     def get_id(self):
@@ -31,7 +33,11 @@ def get_user(email):
                 WHERE (email= {})""".format(email))
 
     row = cur.fetchone()
-    user = User(row[1], row[3], row[2]) if row else None
+    if row:
+        user = User(row[1], row[3], row[2])
+        user.id = row[0] # set the user id
+    else:
+        user = None
     if user is not None:
         return user
 
