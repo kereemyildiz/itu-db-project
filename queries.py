@@ -22,6 +22,9 @@ def add_mentor(columns,mentorID,facultyId,availability):
         query = """insert into mentor ({}) values ({},{},{})""".format(
             columns, mentorID, facultyId, availability)
         run(query)
+        return True
+    else:
+        return False
 
 def get_mentor_by_id(mentorID):
     con = dbapi2.connect(os.getenv('DATABASE_URL'))
@@ -63,10 +66,10 @@ def add_course(columns,course_code,course_name,teacherId,facultyId):
     else:
         return False
 
-def add_mentor_info(columns,mentorId,courseId,letter_grade,enrollment_year,teacherId):
+def add_mentor_info(columns,mentorId,courseId,letter_grade,enrollment_year):
     if (not get_mentor_info(mentorId,courseId)):
-        query = """insert into mentor_info ({}) values ({},{},{},{},{})""".format(
-            columns, mentorId,courseId,letter_grade,enrollment_year,teacherId)
+        query = """insert into mentor_info ({}) values ({},{},{},{})""".format(
+            columns, mentorId,courseId,letter_grade,enrollment_year)
         run(query)
         return True
     else:
@@ -80,17 +83,68 @@ def filter_by_course_code(columns,course_code):
     print(keywords)
     con = dbapi2.connect(os.getenv('DATABASE_URL'))
     cur = con.cursor()
-    cur.execute("""select mentorId,name,course_code,course_name,letter_grade,enrollment_year from (select * from  mentor_info
+    cur.execute("""select mentorId,name,course_code,course_name,letter_grade,enrollment_year,teacher_name,teacher.teacherId from (select * from (select * from  mentor_info
                 inner join course on (course.courseId = mentor_info.courseId)) as q1
-                left join users on (q1.mentorId = users.id) where (course_code = {}) order by mentorId desc """.format(course_code))
+                left join users on (q1.mentorId = users.id)) as q2 inner join teacher on (q2.teacherId = teacher.teacherId) where (course_code = {}) order by mentorId asc """.format(course_code))
     result = cur.fetchall()
     print("filter by da")
+    for mentor in result:
+        print("++++")
+        print(mentor[0])
+        print(type(mentor))
     if result:
         return result
 
     else:
         result=None
         return result
+
+
+def update_email(email,id):
+    query = """update users set email = {} where id = {}""".format(email,id)
+    run(query)
+
+def get_mentee_by_id(menteeID):
+    con = dbapi2.connect(os.getenv('DATABASE_URL'))
+    cur = con.cursor()
+    cur.execute("""SELECT * FROM  mentee
+                WHERE (menteeId= {})""".format(menteeID))
+    row = cur.fetchone()
+    if row:
+        return True
+    else:
+        row=None
+        return False
+
+def add_mentee(columns,menteeId,facultyId):
+    if(get_mentee_by_id(menteeId) == False):
+        query = """insert into mentee ({}) values ({},{})""".format(
+            columns, menteeId, facultyId)
+        run(query)
+        return True
+    else:
+        return False
+
+def get_mentorship(menteeId,course_code):
+    con = dbapi2.connect(os.getenv('DATABASE_URL'))
+    cur = con.cursor()
+    cur.execute("""select menteeId,course_code from mentorship inner join course on (mentorship.courseId = course.courseId) where (menteeId = {} and course_code={})""".format(menteeId,course_code))
+    row = cur.fetchone()
+    unique  = row if row else None
+    if unique is not None:
+        return unique
+    #print("Mentor with given course code not found")
+    return unique
+
+
+def add_mentorship(columns,mentorId,menteeId,courseId,course_code):
+    if (not get_mentorship(menteeId,course_code)):
+        query = """insert into mentorship ({}) values ({},{},{})""".format(
+            columns,mentorId,menteeId,courseId)
+        run(query)
+        return True
+    else:
+        return False
 
 
 def run(query):

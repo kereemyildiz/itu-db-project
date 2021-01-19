@@ -11,6 +11,7 @@ class User(UserMixin):
         self.active = True
         self.id = -1 # default -1 we will change this value
         self.availability = True
+        self.facultyId = -1 # default -1 will change this value
 
 
     def get_id(self):

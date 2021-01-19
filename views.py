@@ -1,6 +1,6 @@
 from flask import Flask, redirect, url_for, request, render_template, flash, session, logging
 #from data import Articles
-from forms import RegisterForm, LoginForm, CourseForm,FilterForm
+from forms import RegisterForm, LoginForm, CourseForm,FilterForm,UpdateForm
 from flask_login.utils import login_required, login_user, logout_user,current_user
 from flask_login import LoginManager
 import psycopg2 as db
@@ -8,6 +8,7 @@ from models.user import User, get_user
 from queries import *
 from models.faculty import get_faculty
 from passlib.hash import sha256_crypt
+import re
 
 global current_user
 
@@ -42,7 +43,8 @@ def register():
 
     return render_template("register.html", form=form)
 
-
+global fac_id
+fac_id=-1
 def login():
     form = LoginForm(request.form)
     if request.method == 'POST' and form.validate():
@@ -62,7 +64,22 @@ def login():
 
 @login_required
 def profile():
-    return render_template("profile.html")
+    flag = 0
+    form = UpdateForm(request.form)
+    if request.method == "POST" and not form.validate():
+        flag = 1
+        return render_template("profile.html",flag=flag,form=form)
+    elif request.method == "POST" and form.validate():
+        email = "'{}'".format(form.email.data)
+        faculty_name = "'{}'".format(form.faculty_name.data)
+        print(email)
+        print(faculty_name)
+        global fac_id
+        fac_id = get_faculty(faculty_name)
+        update_email(email,current_user.id)
+        flash('You have succesfully updated your infos, you need to login with your new email','success')
+        return redirect(url_for('about'))
+    return render_template("profile.html",flag=flag,form=form)
 
 @login_required
 def mentor_page():
@@ -87,23 +104,24 @@ def mentor_page():
         add_course(columns="course_code,course_name,teacherId,facultyId",course_code=course_code,course_name=course_name,teacherId=teacher_id,facultyId=faculty_id)
         course_id = get_course(course_code,teacher_id)
 
-        add_mentor_info(columns="mentorId,courseId,letter_grade,enrollment_year,teacherId",
-                        mentorId=mentor_id,courseId=course_id,letter_grade=letter_grade,enrollment_year=enrollment_year,teacherId=teacher_id)
+        add_mentor_info(columns="mentorId,courseId,letter_grade,enrollment_year",
+                        mentorId=mentor_id,courseId=course_id,letter_grade=letter_grade,enrollment_year=enrollment_year)
 
         flash('Successfully added to mentor list','success')
         return render_template("home_page.html",form=form)
     return render_template("mentor_page.html",form=form)
 
-
 @login_required
 def mentor_list():
     form = FilterForm(request.form)
     flag = False
-    mentors = []
+    mentors=[]
     if request.method == 'POST' and form.validate():
         flag = True
+        global p
         course_code = "'{}'".format(form.course_code.data)
-        mentors = filter_by_course_code(columns="mentorId,name,course_code,course_name,letter_grade,enrollment_year",course_code=course_code)
+        p = course_code
+        mentors = filter_by_course_code(columns="mentorId,name,course_code,course_name,letter_grade,enrollment_year,teacher.teacherId",course_code=course_code)
         print("type of mentors is")
         print(mentors)
         print(type(mentors))
@@ -114,9 +132,23 @@ def mentor_list():
         flash('Mentors are successfully listed','success')
         return render_template("mentor_list_page.html",form=form,mentors=mentors,flag=flag)
     elif request.method == 'POST' and not form.validate():
-        mentor_id = int(request.form['mentor_key'])
+        key = request.form['mentor_key']
         mentee_id = current_user.id
-        
+        global fac_id
+        faculty_id = fac_id
+        if(faculty_id == -1):
+            flash('You need to update your faculty')
+            return redirect(url_for('profile'))
+        _key = re.sub("[() ]","",key) # we get course code and mentor id in string format like (22,26) thus we need to remove parantheses
+        mentor_id,teacher_id = _key.split(',',1)
+        mentor_id = int(mentor_id)
+        teacher_id = int(teacher_id)
+        course_code = p
+        course_id = get_course(course_code,teacher_id)
+        add_mentee(columns="menteeId,facultyId",menteeId=mentee_id,facultyId=faculty_id)
+        add_mentorship(columns="mentorId,menteeId,courseId",mentorId=mentor_id,menteeId=mentee_id,courseId=course_id,course_code=course_code)
+
+
 
 
         return redirect(url_for('login'))

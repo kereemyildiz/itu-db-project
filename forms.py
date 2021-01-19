@@ -33,3 +33,6 @@ class CourseForm(Form):
 
 class FilterForm(Form):
     course_code = StringField('Course Code', [validators.Length(min=3, max=10),validators.DataRequired()])
+class UpdateForm(Form):
+    email = StringField('Email', [validators.Length(min=6, max=50),DataRequired()])
+    faculty_name = StringField('Faculty Name', [validators.Length(min=6, max=50),DataRequired()])
