@@ -32,6 +32,7 @@ def get_mentor_by_id(mentorID):
     if row:
         return True
     else:
+        row=None
         return False
 
 def add_faculty(columns,faculty_name):
@@ -70,6 +71,27 @@ def add_mentor_info(columns,mentorId,courseId,letter_grade,enrollment_year,teach
         return True
     else:
         return False
+
+
+def filter_by_course_code(columns,course_code):
+    keywords = []
+    keywords = columns.replace(' ','').split(',')
+    print("keywords")
+    print(keywords)
+    con = dbapi2.connect(os.getenv('DATABASE_URL'))
+    cur = con.cursor()
+    cur.execute("""select name,course_code,course_name,letter_grade,enrollment_year from (select * from  mentor_info
+                inner join course on (course.courseId = mentor_info.courseId)) as q1
+                left join users on (q1.mentorId = users.id) where (course_code = {})""".format(course_code))
+    result = cur.fetchall()
+    print("filter by da")
+    if result:
+        return result
+
+    else:
+        result=None
+        return result
+
 
 def run(query):
     with dbapi2.connect(os.getenv("DATABASE_URL")) as con:

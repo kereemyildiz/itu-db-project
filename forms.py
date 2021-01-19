@@ -30,3 +30,6 @@ class CourseForm(Form):
                                         NumberRange(min=1980,max=datetime.now().year),
                                     ],
                                     )
+
+class FilterForm(Form):
+    course_code = StringField('Course Code', [validators.Length(min=3, max=10),validators.DataRequired()])

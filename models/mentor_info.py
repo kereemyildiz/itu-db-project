@@ -13,5 +13,5 @@ def get_mentor_info(mentorId,courseId):
     if pr_key is not None:
         return pr_key
 
-    print("Mentor with given course code not found")
+    #print("Mentor with given course code not found")
     return pr_key

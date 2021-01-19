@@ -3,7 +3,7 @@ from db_init import initialize
 
 from flask import Flask, redirect, url_for, request, render_template, flash, session, logging
 # from data import Articles
-from forms import RegisterForm, LoginForm
+from forms import RegisterForm, LoginForm,FilterForm
 from flask_login.utils import login_required, login_user, logout_user
 from flask_login import LoginManager
 import psycopg2 as db
@@ -32,7 +32,7 @@ def create_app():
     app.add_url_rule("/about", view_func=views.about)
     app.add_url_rule("/profile", view_func=views.profile,methods = ['GET','POST'])
     app.add_url_rule("/add-mentor", view_func=views.mentor_page,methods = ['GET','POST'])
-    app.add_url_rule("/article/<string:id>/", view_func=views.article)
+    app.add_url_rule("/mentor-list", view_func=views.mentor_list, methods = ['GET','POST'])
     app.add_url_rule("/register", view_func=views.register,
                      methods=['GET', 'POST'])
     app.add_url_rule("/login", view_func=views.login, methods=['GET', 'POST'])

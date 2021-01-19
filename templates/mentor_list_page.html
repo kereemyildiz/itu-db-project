@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+
+
+{% block body %}
+{% from "includes/_formhelpers.html" import render_field %}
+{% if not flag %}
+<form method="POST" action="">
+    <div class="form-group">
+        {{render_field(form.course_code, class_="form-control")}}
+    </div>
+    <p><input type="submit" class="btn btn-primary" value="Submit"></p>
+</form>
+{% endif %}
+{% if flag %}
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Course Code</th>
+            <th scope="col">Course Name</th>
+            <th scope="col">Letter Grade</th>
+            <th scope="col">Enrollment Year</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for mentor in mentors %}
+        <tr>
+            <th scope="row"></th>
+            <td>{{ mentor[0]}}</td>
+            <td>{{ mentor[1]}}</td>
+            <td>{{ mentor[2]}}</td>
+            <td>{{ mentor[3]}}</td>
+            <td>{{ mentor[4]}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+{% endblock body %}

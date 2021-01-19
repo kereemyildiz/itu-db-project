@@ -13,7 +13,7 @@
             <ul class="nav navbar-nav">
                 <li><a href="{{url_for('home_page')}}">Home</a></li>
                 {% if current_user.is_authenticated %}
-                <li><a href="{{url_for('home_page')}}">Mentor List</a></li>
+                <li><a href="{{url_for('mentor_list')}}">Mentor List</a></li>
                 {% endif %}
                 <li><a href="{{url_for('about')}}">About</a></li>
             </ul>

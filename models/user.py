@@ -15,8 +15,6 @@ class User(UserMixin):
 
     def get_id(self):
         _email = "'{}'".format(self.email)
-        print("get id aliyorsa email")
-        print(_email)
         return _email
     @property
     def is_active(self):
@@ -24,9 +22,6 @@ class User(UserMixin):
 
 
 def get_user(email):
-    print("*** get_userda")
-    print(email)
-    print(type(email))
     con = dbapi2.connect(os.getenv('DATABASE_URL'))
     cur = con.cursor()
     cur.execute("""SELECT * FROM  users
