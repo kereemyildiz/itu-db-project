@@ -103,7 +103,7 @@ def mentor_list():
     if request.method == 'POST' and form.validate():
         flag = True
         course_code = "'{}'".format(form.course_code.data)
-        mentors = filter_by_course_code(columns="name,course_code,course_name,letter_grade,enrollment_year",course_code=course_code)
+        mentors = filter_by_course_code(columns="mentorId,name,course_code,course_name,letter_grade,enrollment_year",course_code=course_code)
         print("type of mentors is")
         print(mentors)
         print(type(mentors))
@@ -113,6 +113,13 @@ def mentor_list():
             return redirect(next_page)
         flash('Mentors are successfully listed','success')
         return render_template("mentor_list_page.html",form=form,mentors=mentors,flag=flag)
+    elif request.method == 'POST' and not form.validate():
+        mentor_id = int(request.form['mentor_key'])
+        mentee_id = current_user.id
+        
+
+
+        return redirect(url_for('login'))
     return render_template('mentor_list_page.html',form=form,mentors=mentors,flag=flag)
 
 

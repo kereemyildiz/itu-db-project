@@ -27,6 +27,7 @@ def load_user(email):
 
 def create_app():
     app = Flask(__name__)
+    app.config.from_object("settings")
 
     app.add_url_rule("/", view_func=views.home_page)
     app.add_url_rule("/about", view_func=views.about)
@@ -46,7 +47,6 @@ def create_app():
 if __name__ == "__main__":
     if (not HEROKU):
         app = create_app()
-        app.secret_key = 'secret123'
         app.run(debug=True)
     else:
         app = create_app()

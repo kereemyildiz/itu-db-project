@@ -80,9 +80,9 @@ def filter_by_course_code(columns,course_code):
     print(keywords)
     con = dbapi2.connect(os.getenv('DATABASE_URL'))
     cur = con.cursor()
-    cur.execute("""select name,course_code,course_name,letter_grade,enrollment_year from (select * from  mentor_info
+    cur.execute("""select mentorId,name,course_code,course_name,letter_grade,enrollment_year from (select * from  mentor_info
                 inner join course on (course.courseId = mentor_info.courseId)) as q1
-                left join users on (q1.mentorId = users.id) where (course_code = {})""".format(course_code))
+                left join users on (q1.mentorId = users.id) where (course_code = {}) order by mentorId desc """.format(course_code))
     result = cur.fetchall()
     print("filter by da")
     if result:

@@ -12,29 +12,53 @@
 </form>
 {% endif %}
 {% if flag %}
-<table class="table">
-    <thead class="thead-dark">
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Name</th>
-            <th scope="col">Course Code</th>
-            <th scope="col">Course Name</th>
-            <th scope="col">Letter Grade</th>
-            <th scope="col">Enrollment Year</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for mentor in mentors %}
-        <tr>
-            <th scope="row"></th>
-            <td>{{ mentor[0]}}</td>
-            <td>{{ mentor[1]}}</td>
-            <td>{{ mentor[2]}}</td>
-            <td>{{ mentor[3]}}</td>
-            <td>{{ mentor[4]}}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<form method="POST" action="">
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Course Code</th>
+                <th scope="col">Course Name</th>
+                <th scope="col">Letter Grade</th>
+                <th scope="col">Enrollment Year</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for mentor in mentors %}
+            <tr>
+                <th scope="row">
+                    <label class="checkbox">
+                        <input type="radio" name="mentor_key" value="{{ mentor[0] }}" />
+                    </label>
+                </th>
+                <div class="form-group">
+                    <th scope="row">
+
+                        {{ mentor[0]}}
+                    </th>
+                </div>
+                <div class="form-group">
+                    <td>{{ mentor[1]}}</td>
+                </div>
+                <div class="form-group">
+                    <td>{{ mentor[2]}}</td>
+                </div>
+                <div class="form-group">
+                    <td>{{ mentor[3]}}</td>
+                </div>
+                <div class="form-group">
+                    <td>{{ mentor[4]}}</td>
+                </div>
+                <div class="form-group">
+                    <td>{{ mentor[5]}}</td>
+                </div>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p><input type="submit" class="btn btn-primary" value="Choosed Mentor"></p>
+</form>
 {% endif %}
 {% endblock body %}
