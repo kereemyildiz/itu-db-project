@@ -68,12 +68,18 @@ def login():
 
 @login_required
 def profile():
+    mentors=[]
+    mentees=[]
     flag = 0
     form = UpdateForm(request.form)
-    #get_mentors()
+    mentors = get_mentors(menteeId = current_user.id)
+    mentees = get_mentees(mentorId=current_user.id)
+    print("type of mentors is")
+    print(mentors)
+    print(type(mentors))
     if request.method == "POST" and not form.validate():
         flag = 1
-        return render_template("profile.html",flag=flag,form=form)
+        return render_template("profile.html",flag=flag,form=form,mentors=mentors,mentees=mentees)
     elif request.method == "POST" and form.validate():
         email = "'{}'".format(form.email.data)
         faculty_name = "'{}'".format(form.faculty_name.data)
@@ -84,7 +90,7 @@ def profile():
         update_facultyId(fac_id,current_user.id)
         flash('You have succesfully updated your infos, you need to login with your new email','success')
         return redirect(url_for('about'))
-    return render_template("profile.html",flag=flag,form=form)
+    return render_template("profile.html",flag=flag,form=form,mentors=mentors,mentees=mentees)
 
 @login_required
 def mentor_page():

@@ -133,7 +133,9 @@ def add_mentee(columns,menteeId,facultyId):
 def get_mentorship(menteeId,course_code):
     con = dbapi2.connect(os.getenv('DATABASE_URL'))
     cur = con.cursor()
-    cur.execute("""select menteeId,course_code from mentorship inner join course on (mentorship.courseId = course.courseId) where (menteeId = {} and course_code={})""".format(menteeId,course_code))
+    cur.execute("""select menteeId,course_code from mentorship inner join course
+     on (mentorship.courseId = course.courseId) where (menteeId = {} and
+     course_code={})""".format(menteeId,course_code))
     row = cur.fetchone()
     unique  = row if row else None
     if unique is not None:
@@ -150,6 +152,46 @@ def add_mentorship(columns,mentorId,menteeId,courseId,course_code):
         return True
     else:
         return False
+
+def get_mentors(menteeId):
+    con = dbapi2.connect(os.getenv('DATABASE_URL'))
+    cur = con.cursor()
+    cur.execute("""select pairNo,name,course_code,course_name,letter_grade,teacher_name from
+    (select * from(select * from(select * from (select * from mentor_info natural join
+    mentorship where menteeId = {}) as q1 natural join mentor ) as q2 natural join users) as
+    q3 inner join course on (course.courseId = q3.courseId)) as q4 inner join teacher on
+    (teacher.teacherId = q4.teacherId)""".format(menteeId))
+    result = cur.fetchall()
+    for mentor in result:
+        print("???")
+        print(mentor[0])
+        print(type(mentor))
+    if result:
+        return result
+
+    else:
+        result=None
+        return result
+
+def get_mentees(mentorId):
+    con = dbapi2.connect(os.getenv('DATABASE_URL'))
+    cur = con.cursor()
+    cur.execute("""select name,course_code,course_name,email
+     from(select * from(select * from (select * from mentor_info natural
+     join mentorship where mentorId = {}) as q1 natural join mentee ) as q2
+     natural join users) as q3 inner join course on (course.courseId =
+      q3.courseId) """.format(mentorId))
+    result = cur.fetchall()
+    for mentor in result:
+        print("???")
+        print(mentor[0])
+        print(type(mentor))
+    if result:
+        return result
+
+    else:
+        result=None
+        return result
 
 
 def run(query):

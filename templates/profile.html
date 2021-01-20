@@ -26,67 +26,88 @@
         <div class="col-lg-6">
             <h1>MY MENTORS</h1>
             <table class="table">
-                <thead>
+                <thead class="thead-dark">
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">First</th>
-                        <th scope="col">Last</th>
-                        <th scope="col">Handle</th>
+                        <th scope="col">Mentor Name</th>
+                        <th scope="col">Course Code</th>
+                        <th scope="col">Course Name</th>
+                        <th scope="col">Letter Grade</th>
+                        <th scope="col">Teacher Name</th>
+
+
+
                     </tr>
                 </thead>
                 <tbody>
+                    {% if mentors %}
+                    {% for mentor in mentors %}
                     <tr>
-                        <th scope="row">1</th>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        <td>@mdo</td>
+                        <div class="form-group">
+                            <th scope="row">
+
+                                {{ mentor[0]}}
+                            </th>
+                        </div>
+                        <div class="form-group">
+                            <td>{{ mentor[1]}}</td>
+                        </div>
+                        <div class="form-group">
+                            <td>{{ mentor[2]}}</td>
+                        </div>
+                        <div class="form-group">
+                            <td>{{ mentor[3]}}</td>
+                        </div>
+                        <div class="form-group">
+                            <td>{{ mentor[4]}}</td>
+                        </div>
+                        <div class="form-group">
+                            <td>{{ mentor[5]}}</td>
+                        </div>
+
                     </tr>
-                    <tr>
-                        <th scope="row">2</th>
-                        <td>Jacob</td>
-                        <td>Thornton</td>
-                        <td>@fat</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">3</th>
-                        <td>Larry</td>
-                        <td>the Bird</td>
-                        <td>@twitter</td>
-                    </tr>
+                    {% endfor %}
+                    {% endif %}
                 </tbody>
             </table>
         </div>
         <div class="col-lg-6">
             <h1>MY MENTEES</h1>
-
             <table class="table">
-                <thead>
+                <thead class="thead-dark">
                     <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">First</th>
-                        <th scope="col">Last</th>
-                        <th scope="col">Handle</th>
+                        <th scope="col">Mentee Name</th>
+                        <th scope="col">Course Code</th>
+                        <th scope="col">Course Name</th>
+                        <th scope="col">Mentee Email</th>
+
+
+
                     </tr>
                 </thead>
                 <tbody>
+                    {% if mentees %}
+                    {% for mentee in mentees %}
                     <tr>
-                        <th scope="row">1</th>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        <td>@mdo</td>
+                        <div class="form-group">
+                            <th scope="row">
+
+                                {{ mentee[0]}}
+                            </th>
+                        </div>
+                        <div class="form-group">
+                            <td>{{ mentee[1]}}</td>
+                        </div>
+                        <div class="form-group">
+                            <td>{{ mentee[2]}}</td>
+                        </div>
+                        <div class="form-group">
+                            <td>{{ mentee[3]}}</td>
+                        </div>
+
                     </tr>
-                    <tr>
-                        <th scope="row">2</th>
-                        <td>Jacob</td>
-                        <td>Thornton</td>
-                        <td>@fat</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">3</th>
-                        <td>Larry</td>
-                        <td>the Bird</td>
-                        <td>@twitter</td>
-                    </tr>
+                    {% endfor %}
+                    {%endif%}
                 </tbody>
             </table>
         </div>
