@@ -25,14 +25,20 @@ def register():
     form = RegisterForm(request.form)
     if request.method == 'POST' and form.validate():
 
+        faculty_name = "'{}'".format(form.faculty.data)
+        faculty_id = get_faculty(faculty_name)
+        if faculty_id is None:
+            flash('Please enter valid faculty','danger')
+            return render_template('register.html',form=form)
+
         user = User(form.name.data, form.email.data,
-                    sha256_crypt.hash(form.password.data))
+                    sha256_crypt.hash(form.password.data),faculty_id)
         print("password:")
         print(form.password.data)
         print(user.password)
 
-        is_new_user = add_user(columns="name,email,password", name="'{}'".format(
-            user.name), email="'{}'".format(user.email), password="'{}'".format(user.password))
+        is_new_user = add_user(columns="name,email,password,facultyId", name="'{}'".format(
+            user.name), email="'{}'".format(user.email), password="'{}'".format(user.password),facultyId=faculty_id)
 
         if (is_new_user):
             flash('You are now registered and can login', 'success')
@@ -43,8 +49,6 @@ def register():
 
     return render_template("register.html", form=form)
 
-global fac_id
-fac_id=-1
 def login():
     form = LoginForm(request.form)
     if request.method == 'POST' and form.validate():
@@ -66,6 +70,7 @@ def login():
 def profile():
     flag = 0
     form = UpdateForm(request.form)
+    #get_mentors()
     if request.method == "POST" and not form.validate():
         flag = 1
         return render_template("profile.html",flag=flag,form=form)
@@ -74,9 +79,9 @@ def profile():
         faculty_name = "'{}'".format(form.faculty_name.data)
         print(email)
         print(faculty_name)
-        global fac_id
         fac_id = get_faculty(faculty_name)
         update_email(email,current_user.id)
+        update_facultyId(fac_id,current_user.id)
         flash('You have succesfully updated your infos, you need to login with your new email','success')
         return redirect(url_for('about'))
     return render_template("profile.html",flag=flag,form=form)
@@ -98,7 +103,7 @@ def mentor_page():
         add_teacher(columns="teacher_name,facultyId",teacher_name=teacher,facultyId=faculty_id)
         teacher_id = get_teacher(teacher)
 
-        add_mentor(columns="mentorID,facultyId,availability",mentorID=current_user.id,facultyId=faculty_id,availability=current_user.availability)
+        add_mentor(columns="mentorID,facultyId,availability",mentorID=current_user.id,facultyId=current_user.facultyId,availability=current_user.availability)
         mentor_id = current_user.id
 
         add_course(columns="course_code,course_name,teacherId,facultyId",course_code=course_code,course_name=course_name,teacherId=teacher_id,facultyId=faculty_id)
@@ -134,11 +139,9 @@ def mentor_list():
     elif request.method == 'POST' and not form.validate():
         key = request.form['mentor_key']
         mentee_id = current_user.id
-        global fac_id
-        faculty_id = fac_id
-        if(faculty_id == -1):
-            flash('You need to update your faculty')
-            return redirect(url_for('profile'))
+
+        faculty_id = current_user.facultyId
+
         _key = re.sub("[() ]","",key) # we get course code and mentor id in string format like (22,26) thus we need to remove parantheses
         mentor_id,teacher_id = _key.split(',',1)
         mentor_id = int(mentor_id)
@@ -148,10 +151,8 @@ def mentor_list():
         add_mentee(columns="menteeId,facultyId",menteeId=mentee_id,facultyId=faculty_id)
         add_mentorship(columns="mentorId,menteeId,courseId",mentorId=mentor_id,menteeId=mentee_id,courseId=course_id,course_code=course_code)
 
-
-
-
-        return redirect(url_for('login'))
+        flash('You have succesfully added a mentor','success')
+        return redirect(url_for('about'))
     return render_template('mentor_list_page.html',form=form,mentors=mentors,flag=flag)
 
 

@@ -4,14 +4,14 @@ import os
 
 
 class User(UserMixin):
-    def __init__(self, name, email, password):
+    def __init__(self, name, email, password,facultyId):
         self.name = name
         self.email = email
         self.password = password
         self.active = True
         self.id = -1 # default -1 we will change this value
         self.availability = True
-        self.facultyId = -1 # default -1 will change this value
+        self.facultyId = facultyId
 
 
     def get_id(self):
@@ -30,7 +30,7 @@ def get_user(email):
 
     row = cur.fetchone()
     if row:
-        user = User(row[1], row[3], row[2])
+        user = User(row[1], row[2], row[3],row[4])
         user.id = row[0] # set the user id
     else:
         user = None

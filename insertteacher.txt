@@ -3,7 +3,7 @@ insert into teacher (teacher_name,facultyId) values (
 	3
 );
 insert into teacher (teacher_name,facultyId) values (
-	'Kerem Yildiz',
+	'Ilkay Oksuz',
 	3
 );
 insert into teacher (teacher_name,facultyId) values (
@@ -12,11 +12,11 @@ insert into teacher (teacher_name,facultyId) values (
 );
 insert into teacher (teacher_name,facultyId) values (
 	'Hazim Ekenel',
-	5
+	3
 );
 insert into teacher (teacher_name,facultyId) values (
 	'Turgut Uyar',
-	6
+	3
 );
 insert into teacher (teacher_name,facultyId) values (
 	'Bora Döken',
@@ -32,9 +32,9 @@ insert into teacher (teacher_name,facultyId) values (
 );
 insert into teacher (teacher_name,facultyId) values (
 	'Hasan Huseyin',
-	2
+	8
 );
 insert into teacher (teacher_name,facultyId) values (
 	'Ahmet Erten',
-	2
+	7
 );

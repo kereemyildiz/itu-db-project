@@ -14,7 +14,7 @@ import views
 HEROKU = False
 
 if (not HEROKU):
-    os.environ['DATABASE_URL'] = "dbname='dbproject_1' user='postgres' host=localhost password='k1e2r3e4m5'"
+    os.environ['DATABASE_URL'] = "dbname='dbproject_2' user='postgres' host=localhost password='k1e2r3e4m5'"
     initialize(os.environ.get('DATABASE_URL'))
 
 lm = LoginManager()

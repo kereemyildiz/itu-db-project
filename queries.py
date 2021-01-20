@@ -8,10 +8,11 @@ from models.course import *
 from models.mentor_info import *
 
 
-def add_user(columns, name, email, password):
+def add_user(columns, name, email, password,facultyId):
     if (not get_user(email)):
-        query = """insert into users ({}) values ({},{},{})""".format(
-            columns, name, email, password)
+        query = """insert into users ({}) values ({},{},{},{})""".format(
+            columns, name, email, password,facultyId)
+        print(query)
         run(query)
         return True
     else:
@@ -102,6 +103,10 @@ def filter_by_course_code(columns,course_code):
 
 def update_email(email,id):
     query = """update users set email = {} where id = {}""".format(email,id)
+    run(query)
+
+def update_facultyId(facultyId,id):
+    query = """update users set facultyId = {} where id = {}""".format(facultyId,id)
     run(query)
 
 def get_mentee_by_id(menteeID):
