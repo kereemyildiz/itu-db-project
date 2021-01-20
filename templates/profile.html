@@ -28,6 +28,7 @@
             <table class="table">
                 <thead class="thead-dark">
                     <tr>
+                        <th scope="col"></th>
                         <th scope="col">#</th>
                         <th scope="col">Mentor Name</th>
                         <th scope="col">Course Code</th>
@@ -40,8 +41,17 @@
                     </tr>
                 </thead>
                 <tbody>
+
                     {% if mentors %}
                     {% for mentor in mentors %}
+                    <div class="form-group">
+                        <th scope="row">
+                            <label class="checkbox">
+                                <input type="checkbox" name="" value="" />
+                            </label>
+                        </th>
+                    </div>
+
                     <tr>
                         <div class="form-group">
                             <th scope="row">
